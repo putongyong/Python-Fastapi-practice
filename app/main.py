@@ -7,7 +7,7 @@ import uvicorn
 from infrastructure.models.models import Site, Group
 from infrastructure.models.schemas import ResponseGroup, ResponseSite, SiteCreate, GroupCreate  # Import the new schemas
 
-app = FastAPI(title="Python technical test")
+app = FastAPI(title="Python FastAPI Practice")
 
 # Dependency
 def get_db():
