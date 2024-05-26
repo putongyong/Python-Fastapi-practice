@@ -17,7 +17,8 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/sites/", response_model=ResponseSite)
+# Site CRUD
+@app.post("/sites/create/", response_model=ResponseSite, tags=["Site CRUD"])
 def create_site(site: SiteCreate, db: Session = Depends(get_db)):
     db_site = Site(**site.dict())
     db.add(db_site)
@@ -25,14 +26,23 @@ def create_site(site: SiteCreate, db: Session = Depends(get_db)):
     db.refresh(db_site)
     return db_site
 
-@app.get("/sites/{site_id}", response_model=ResponseSite)
+@app.get("/sites/read/{site_id}", response_model=ResponseSite, tags=["Site CRUD"])
 def read_site(site_id: int, db: Session = Depends(get_db)):
     db_site = db.query(Site).filter(Site.id == site_id).first()
     if db_site is None:
         raise HTTPException(status_code=404, detail="Site not found")
     return db_site
 
-@app.post("/groups/", response_model=ResponseGroup)
+@app.put("/sites/update/{site_id}", response_model=ResponseSite, tags=["Site CRUD"])
+def update_site(site: SiteCreate, db: Session = Depends(get_db)):
+    pass
+
+@app.delete("/sites/delete/{site_id}", response_model=ResponseSite, tags=["Site CRUD"])
+def delete_site(site: SiteCreate, db: Session = Depends(get_db)):
+    pass
+    
+# Group CRUD
+@app.post("/groups/create/", response_model=ResponseGroup, tags=["Group CRUD"])
 def create_group(group: GroupCreate, db: Session = Depends(get_db)):
     db_group = Group(**group.dict())
     db.add(db_group)
@@ -40,12 +50,20 @@ def create_group(group: GroupCreate, db: Session = Depends(get_db)):
     db.refresh(db_group)
     return db_group
 
-@app.get("/groups/{group_id}", response_model=ResponseGroup)
+@app.get("/groups/read/{group_id}", response_model=ResponseGroup, tags=["Group CRUD"])
 def read_group(group_id: int, db: Session = Depends(get_db)):
     db_group = db.query(Group).filter(Group.id == group_id).first()
     if db_group is None:
         raise HTTPException(status_code=404, detail="Group not found")
     return db_group
+
+@app.put("/groups/update/{group_id}", response_model=ResponseSite, tags=["Group CRUD"])
+def update_group(group_id: int, db: Session = Depends(get_db)):
+    pass
+
+@app.delete("/groups/delete/{group_id}", response_model=ResponseSite, tags=["Group CRUD"])
+def delete_group(group_id: int, db: Session = Depends(get_db)):
+    pass
 
 async def main():
     config = uvicorn.Config("main:app", port=5000, log_level="info")
